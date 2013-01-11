@@ -6,9 +6,9 @@ int cols, rows;   // Number of columns and rows in our system
 // An averae pixel color is achieved by taking the average
 // of each color value in the matrix.
 // The values in the convolution matrix must add up to 1.
-float[][] matrix = { { 0, 0, 0 },
-                     { 0, 0, 1 },
-                     { 0, 0, 0 } };
+float[][] matrix = { { -1, -1, -1 },
+                     { -1,  9, -1 },
+                     { -1, -1, -1 } };
 
 int matrixsize = 3;
                      

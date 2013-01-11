@@ -6,51 +6,33 @@ int cols, rows;   // Number of columns and rows in our system
 // An averae pixel color is achieved by taking the average
 // of each color value in the matrix.
 // The values in the convolution matrix must add up to 1.
-float[][] matrix = { { 0, 0, 0 },
-                     { 0, 0, 1 },
-                     { 0, 0, 0 } };
-
+float[][] matrix = { { 1/9, 1/9, 1/9 },
+                     { 1/9, 1/9, 1/9 },
+                     { 1/9, 1/9, 1/9 } };
 int matrixsize = 3;
                      
 void setup() {
   size(200, 200, P3D); 
   img  = loadImage("example.png");      // Load the image
-  cols = width  / cellsize;             // Calculate # of columns
-  rows = height / cellsize;             // Calculate # of rows
+  noLoop();
 }
 
 void draw() {
   background(0);
   loadPixels();
   
-  // Begin loop for columns of cells
-  for ( int i = 0; i < cols; i++) {
-    // Begin loop for rows of cells
-    for ( int j = 0; j < rows; j++) {
-      // Get the coordinate for the center of the cell area
-      int x = i * cellsize + cellsize / 2;
-      int y = j * cellsize + cellsize / 2;
-      int loc = x + y * width;             // Pixel array location
-//      color c = img.pixels[loc];           // Grab the color
+         // Pixel array location
+      color c = img.pixels[6030];           // Grab the color
       
       // Each pixel location (x, y) gets passed into a function
       // called convolution() which returns a new color value to be displayed.
-      color c = convolution(x, y, matrix, matrixsize, img);
+      color convo = convolution(30, 30, matrix, matrixsize, img);
       
-      // Calculate a z position as a function of mouseX and pixel brightness
-//      float z = (mouseX / (float)width) * brightness(img.pixels[loc]) - 100.0;
-      
-      // Translate to the location, set fill and stroke, and draw the rect
-      pushMatrix();
-      translate(x, y, 0);
-      fill(c);
-      noStroke();
-      rectMode(CENTER);
-      rect(0, 0, cellsize, cellsize);
-      popMatrix();
-    }
-  }
+      println("pixel color is " + red(c) + " " + blue(c) + " " + green(c));
+      println("convo color is " + red(convo) + " " + blue(convo) + " " + green(convo));
+      println("convo color is " + hex(convo));
 }
+
 
 color convolution(int x, int y, float[][] matrix, int matrixsize, PImage img) {
   float rtotal = 0.0;
@@ -64,7 +46,7 @@ color convolution(int x, int y, float[][] matrix, int matrixsize, PImage img) {
       // What pixel are we testing
       int xloc = x + i - offset;
       int yloc = y + j - offset;
-      int loc = x + img.width * y;
+      int loc = xloc + img.width * yloc;
       
       // Make sure we have not walked off the edge of the pixel array
       loc = constrain(loc, 0, img.pixels.length - 1);
@@ -75,6 +57,7 @@ color convolution(int x, int y, float[][] matrix, int matrixsize, PImage img) {
       rtotal += (red(img.pixels[loc])   * matrix[i][j]);
       gtotal += (green(img.pixels[loc]) * matrix[i][j]);
       btotal += (blue(img.pixels[loc])  * matrix[i][j]);
+      println("totals are " + rtotal + " " + gtotal + " " + btotal);
     }
   }
   
