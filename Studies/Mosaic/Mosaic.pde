@@ -6,9 +6,9 @@ int cols, rows;   // Number of columns and rows in our system
 // An averae pixel color is achieved by taking the average
 // of each color value in the matrix.
 // The values in the convolution matrix must add up to 1.
-float[][] matrix = { { -1, -1, -1 },
-                     { -1,  9, -1 },
-                     { -1, -1, -1 } };
+float[][] matrix = { { 0, 0, 0 },
+                     { 0, 1, 0 },
+                     { 0, 0, 0 } };
 
 int matrixsize = 3;
                      
@@ -31,22 +31,40 @@ void draw() {
       int x = i * cellsize + cellsize / 2;
       int y = j * cellsize + cellsize / 2;
       int loc = x + y * width;             // Pixel array location
-//      color c = img.pixels[loc];           // Grab the color
       
       // Each pixel location (x, y) gets passed into a function
       // called convolution() which returns a new color value to be displayed.
-      color c = convolution(x, y, matrix, matrixsize, img);
+      color cellColor = convolution(x, y, matrix, matrixsize, img);
       
       // Calculate a z position as a function of mouseX and pixel brightness
 //      float z = (mouseX / (float)width) * brightness(img.pixels[loc]) - 100.0;
       
       // Translate to the location, set fill and stroke, and draw the rect
       pushMatrix();
-      translate(x, y, 0);
-      fill(c);
-      noStroke();
-      rectMode(CENTER);
-      rect(0, 0, cellsize, cellsize);
+        translate(x, y, 0);
+        fill(cellColor);
+        noStroke();
+        scale(20);
+        beginShape(TRIANGLES);
+          vertex(-1, -1, -1);
+          vertex( 1, -1, -1);
+          vertex( 0,  0,  4);
+          
+          vertex( 1, -1, -1);
+          vertex( 1,  1, -1);
+          vertex( 0,  0,  4);
+          
+          vertex( 1, 1, -1);
+          vertex(-1, 1, -1);
+          vertex( 0, 0,  4);
+          
+          vertex(-1,  1, -1);
+          vertex(-1, -1, -1);
+          vertex( 0,  0,  4);
+        endShape();
+        
+//        rectMode(CENTER);
+//        rect(0, 0, cellsize, cellsize);
       popMatrix();
     }
   }
