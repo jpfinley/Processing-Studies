@@ -1,5 +1,5 @@
 PImage img;       // The source image
-int cellsize = 20; // Dimensions of each cell in the grid, in pixels
+int cellsize = 10; // Dimensions of each cell in the grid, in pixels
 int cols, rows;   // Number of columns and rows in our system
 
 // Create a 2D matrix in order to perform a convolution.
@@ -17,6 +17,7 @@ void setup() {
   img  = loadImage("example.png");      // Load the image
   cols = width  / cellsize;             // Calculate # of columns
   rows = height / cellsize;             // Calculate # of rows
+  noLoop();
 }
 
 void draw() {
@@ -36,35 +37,33 @@ void draw() {
       // called convolution() which returns a new color value to be displayed.
       color cellColor = convolution(x, y, matrix, matrixsize, img);
       
-      // Calculate a z position as a function of mouseX and pixel brightness
-//      float z = (mouseX / (float)width) * brightness(img.pixels[loc]) - 100.0;
+      // Calculate a z position as a function pixel brightness
+      float depth = map(brightness(img.pixels[loc]), 0.0, 255.0, 0.0, 6.0);
       
-      // Translate to the location, set fill and stroke, and draw the rect
+      // Translate to the location, set up the drawing instructions,
+      // and draw the triangles that make up each spike.
       pushMatrix();
-        translate(x, y, 0);
+        translate(x, y);
         fill(cellColor);
         noStroke();
         scale(20);
         beginShape(TRIANGLES);
           vertex(-1, -1, -1);
           vertex( 1, -1, -1);
-          vertex( 0,  0,  4);
+          vertex( 0,  0,  depth);
           
           vertex( 1, -1, -1);
           vertex( 1,  1, -1);
-          vertex( 0,  0,  4);
+          vertex( 0,  0,  depth);
           
           vertex( 1, 1, -1);
           vertex(-1, 1, -1);
-          vertex( 0, 0,  4);
+          vertex( 0, 0,  depth);
           
           vertex(-1,  1, -1);
           vertex(-1, -1, -1);
-          vertex( 0,  0,  4);
+          vertex( 0,  0,  depth);
         endShape();
-        
-//        rectMode(CENTER);
-//        rect(0, 0, cellsize, cellsize);
       popMatrix();
     }
   }
