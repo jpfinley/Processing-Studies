@@ -1,5 +1,5 @@
 PImage img;       // The source image
-int cellsize = 10; // Dimensions of each cell in the grid, in pixels
+int cellsize = 20; // Dimensions of each cell in the grid, in pixels
 int cols, rows;   // Number of columns and rows in our system
 
 // Create a 2D matrix in order to perform a convolution.
@@ -17,12 +17,17 @@ void setup() {
   img  = loadImage("example.png");      // Load the image
   cols = width  / cellsize;             // Calculate # of columns
   rows = height / cellsize;             // Calculate # of rows
-  noLoop();
 }
 
 void draw() {
   background(0);
   loadPixels();
+
+  // Set up lighting for the scene
+  ambientLight(150, 150, 150);
+  spotLight(255, 255, 255, width/2, height/2, 400, 0, 0, -1, PI/4, 2);
+  directionalLight(255, 255, 255, -1, 1, 2);
+  directionalLight(150, 150, 150, 0, -1, 4);
   
   // Begin loop for columns of cells
   for ( int i = 0; i < cols; i++) {
@@ -37,8 +42,8 @@ void draw() {
       // called convolution() which returns a new color value to be displayed.
       color cellColor = convolution(x, y, matrix, matrixsize, img);
       
-      // Calculate a z position as a function pixel brightness
-      float depth = map(brightness(img.pixels[loc]), 0.0, 255.0, 0.0, 6.0);
+      // Calculate a z position for the spike as a function pixel brightness
+      float depth = map(brightness(img.pixels[loc]), 0.0, 255.0, 0.0, 5.0);
       
       // Translate to the location, set up the drawing instructions,
       // and draw the triangles that make up each spike.
